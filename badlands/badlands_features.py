@@ -84,13 +84,13 @@ def mask_bi(b02, b03, b04):
 
 def final_mask(b02, b03, b04, b08):
     mask = (
-            #mask_rgb(b02, b03, b04)
-            # mask_ndvi(b03, b08)
-             mask_arvi(b02, b04, b08)
-            #& mask_evi2(b04, b08)
-            #& mask_msi(b04, b08)
-            #& mask_ngrdi(b03, b04)
-            #& mask_bi(b02, b03, b04)
+            mask_rgb(b02, b03, b04)
+            & mask_ndvi(b03, b08)
+            & mask_arvi(b02, b04, b08)
+            & mask_evi2(b04, b08)
+            & mask_msi(b04, b08)
+            & mask_ngrdi(b03, b04)
+            & mask_bi(b02, b03, b04)
     )
     return mask
 
