@@ -27,7 +27,7 @@ with rasterio.open(config.B02_FILE) as b02:
         dtype=np.uint8
     )
 
-    out_tif = os.path.join(config.FEATURES_FOLDER,'mask_arvi.tif')
+    out_tif = os.path.join(config.FEATURES_FOLDER,'badlands.tif')
     with rasterio.open(
             out_tif,
             'w',

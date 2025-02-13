@@ -5,11 +5,11 @@ import config
 
 
 # features
-def compute_ndvi(b03, b08):
+def compute_ndwi(b03, b08):
     return (b03 - b08) / (b03 + b08)
 
 
-def compute_ndwi(b04, b08):
+def compute_ndvi(b04, b08):
     return (b08 - b04) / (b08 + b04)
 
 
@@ -35,6 +35,11 @@ def compute_bi(b02, b03, b04):
 
 # masks
 def mask_rgb(b02, b03, b04):
+    # rescale values
+    b02 = b02 / b02.max() * 255
+    b03 = b03 / b03.max() * 255
+    b04 = b04 / b04.max() * 255
+
     mask_b02 = (b02 >= 120) & (b02 <= 180)
     mask_b03 = (b03 >= 140) & (b03 <= 190)
     mask_b04 = (b04 >= 170) & (b04 <= 220)
@@ -42,14 +47,16 @@ def mask_rgb(b02, b03, b04):
     return mask.astype(np.uint8)
 
 
-def mask_ndvi(b03, b08):
-    ndvi_values = compute_ndvi(b03, b08)
-    mask = (ndvi_values >= -0.15) & (ndvi_values <= 0.2)
+def mask_ndvi(b04, b08):
+    ndvi_values = compute_ndvi(b04, b08)
+    mask = (ndvi_values >= -0.15) & (ndvi_values <= 0.25)
     return mask.astype(np.uint8)
 
 
-def mask_ndwi(ndwi_values):
-    pass
+def mask_ndwi(b03, b08):
+    ndwi_values = compute_ndwi(b03, b08)
+    mask = (ndwi_values >= -0.25) & (ndwi_values <= 0.25)
+    return mask.astype(np.uint8)
 
 
 def mask_arvi(b02, b04, b08):
@@ -105,15 +112,15 @@ def save_mask(mask, filename, reference_file):
         )
 
         with rasterio.open(
-            filename,
-            'w',
-            driver='GTiff',  # Ensure GeoTIFF format
-            height=profile['height'],
-            width=profile['width'],
-            count=1,
-            dtype=rasterio.uint8,
-            crs=profile['crs'],
-            transform=profile['transform']
+                filename,
+                'w',
+                driver='GTiff',  # Ensure GeoTIFF format
+                height=profile['height'],
+                width=profile['width'],
+                count=1,
+                dtype=rasterio.uint8,
+                crs=profile['crs'],
+                transform=profile['transform']
         ) as dst:
             dst.write(mask.astype(np.uint8), 1)
 
