@@ -137,6 +137,8 @@ mask_ngrdi_res = mask_ngrdi(b03, b04)
 mask_bi_res = mask_bi(b02, b03, b04)
 final_mask_res = final_mask(b02, b03, b04, b08)
 
+os.makedirs(config.FEATURES_FOLDER, exist_ok=True)
+
 # Save individual masks
 save_mask(mask_rgb_res, os.path.join(config.FEATURES_FOLDER, "mask_rgb.tif"), config.B02_FILE)
 save_mask(mask_ndvi_res, os.path.join(config.FEATURES_FOLDER, "mask_ndvi.tif"), config.B02_FILE)
